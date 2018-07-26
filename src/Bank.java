@@ -4,11 +4,16 @@ public class Bank
 	public Bank()
 	{
 		showLoginScreen();
-		signUp();
+		showSignUp();
 	}
 	
-	public static void showLoginScreen()
+	
+	public static void showLoginScreen() //Shows signup and and login
 	{
+		String tmp = null;
+		String name = null;
+		String password = null;
+		String name2 = null;
 		System.out.println("Welcome to the Bank!");
         System.out.println("--------------------");
         System.out.println("Choose an option:");
@@ -24,14 +29,25 @@ public class Bank
             System.out.println("Sign Up");
             System.out.println("_________");
             System.out.println("Choose a name: ");
-            String name = in.next();
+            name = in.next();
             System.out.println("Choose a password: ");
-            String password = in.next();
-            System.out.println("Welcome " + name + ", Your Password is: " + password);
+            password = in.next();
+            System.out.println("Choose an ID");
+            name2 = in.next();
+            System.out.println("Welcome " + name + ", Your Password is: " + password + ", Your User ID is: " + name2);
+            
             
         }
-        else if (choice.equals("2")){
+        else if (choice.equals("2"))
+        {
             System.out.println("Log in");
+            System.out.println("Enter Username: ");
+            tmp = in.next();
+            if(tmp.equals(name))
+            {
+            	
+            }
+            System.out.println("Password: ");
         }
         else{
             System.out.println("Please choose an option between 1 and 2");
@@ -39,4 +55,4 @@ public class Bank
         }
     }
 	}
-}
+

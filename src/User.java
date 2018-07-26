@@ -38,5 +38,17 @@ public class User
 		return name;
 	}
 	
-	
+	public void spend(String AccID, double amount, String type)
+	{
+		Scanner in = new Scanner(System.in);
+		AccID = in.next();
+		in.close();
+		Scanner in2 = new Scanner(System.in);
+		amount = in2.nextInt();
+		in2.close();
+		Scanner in3 = new Scanner(System.in);
+		type = in.next();
+		in3.close();
+		
+	}
 }
