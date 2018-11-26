@@ -1,97 +1,99 @@
 import java.util.*;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Account 
+
+public class Account
 {
+	
 	private int accID;
 	private double balance;
-	private String type;
-	private int count;
+	private String accType;
 	private ArrayList<Transaction> transactions;
-	
-	public Account(int myAccId, String myType)
+	private int transactionCount;
+
+	//constructor
+	public Account(int accID, String accType) 
 	{
-		accID = myAccId;
+		this.accID = accID;
 		this.balance = 0;
-		type = myType;
-		count = 0;
+		this.accType = accType;
 		this.transactions = new ArrayList<Transaction>();
+		transactionCount = 0;
 	}
 	
+	//gets the current balance of the Account
 	public double getBalance()
 	{
 		return balance;
 	}
 	
-	public void deposit(double amount, String type)
+	//deposits money into the account
+	public void deposit(double amount, String type) 
 	{
-		balance = balance + amount;
-		LocalDateTime time = java.time.LocalDateTime.now();
-		if(transactions.size() < 10)
+		balance += amount;
+		LocalTime time = java.time.LocalTime.now();
+		if (transactions.size() < 10) 
 		{
-			Transaction newTransaction = new Transaction(count, amount, type, time);
-			count++;
-		    transactions.add(newTransaction);
+			Transaction newTransaction = new Transaction(transactionCount, amount, type, time);
+			transactionCount++;
+			transactions.add(newTransaction);
 		}
 		else
 		{
 			transactions.remove(0);
-			Transaction newTransaction = new Transaction(count, amount, type, time);
-			count++;
+			Transaction newTransaction = new Transaction(transactionCount, amount, type, time);
+			transactionCount++;
 			transactions.add(newTransaction);
 		}
 	}
 	
-	public void withdraw(double amount, String type)
+	//withdraws money from the Account
+	public void withdraw(double amount, String type) 
 	{
-		balance = balance - amount;
-		LocalDateTime time = java.time.LocalDateTime.now();
-		if(transactions.size() < 10)
+		balance -= amount;
+		LocalTime time = java.time.LocalTime.now();
+		if (transactions.size() < 10) 
 		{
-			Transaction newTransaction = new Transaction(count, -amount, type, time);
-			count++;
-		    transactions.add(newTransaction);
+			Transaction newTransaction = new Transaction(transactionCount, -amount, type, time);
+			transactionCount++;
+			transactions.add(newTransaction);
 		}
 		else
 		{
 			transactions.remove(0);
-			Transaction newTransaction = new Transaction(count, -amount, type, time);
-			count++;
+			Transaction newTransaction = new Transaction(transactionCount, -amount, type, time);
+			transactionCount++;
 			transactions.add(newTransaction);
 		}
 	}
 	
-	public int getAccID()
+	//prints transaction log and creates a txt file of the log
+	public void printTransactionLog() 
 	{
-		return accID;
-	}
-	
-	public String getType()
-	{
-		return type;
-	}
-	
-	public void printTransactionLog()
-	{
+		System.out.println("");
 		System.out.println("Account ID: " + getAccID());
-		System.out.println("Account ID: " + getBalance());
-		System.out.println("Account ID: " + getType());
-		if(transactions.size() == 0)
+		System.out.println("Balance: " + getBalance());
+		System.out.println("Type: " + getAccType());
+		System.out.println("");
+		System.out.println("                 Transactions                 ");
+		System.out.println("                ==============                ");
+		if (transactions.size() == 0) 
 		{
-			System.out.println("Empty transactions");
+			System.out.println("No transactions.");
 		}
-		for(int i = 0; i < transactions.size(); i++)
+		for (int i = 0; i < transactions.size(); i++)
 		{
 			Transaction transaction = transactions.get(i);
 			System.out.println(transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());
-		}		
+		}
+		
 		try
 		{
-			File file = new File("TransactionLog.txt");
-			if(!file.exists())
+			File file = new File("TransLog.txt");
+			if (!file.exists())
 			{
 				file.createNewFile();
 			}
@@ -99,15 +101,18 @@ public class Account
 			writer.println("");
 			writer.println("Account ID: " + getAccID());
 			writer.println("Balance: " + getBalance());
-			writer.println("Type: " + getType());
-			if(transactions.size() == 0)
+			writer.println("Type: " + getAccType());
+			writer.println("");
+			writer.println("                 Transactions                 ");
+			writer.println("                ==============                ");
+			if (transactions.size() == 0)
 			{
-				writer.println("Empty transactions.");
+				writer.println("No transactions.");
 			}
-			for(int i = 0; i < transactions.size(); i++)
+			for (int i = 0; i < transactions.size(); i++)
 			{
 				Transaction transaction = transactions.get(i);
-				writer.println(transaction.getTransactionID() + " " + transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());
+				writer.println(transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());
 			}
 			writer.close();
 		}
@@ -117,28 +122,39 @@ public class Account
 		}
 	}
 	
-	public void printTransactionLog(String type)
+	public void printTransactionLog(String type) 
 	{
+		System.out.println("");
 		System.out.println("Account ID: " + getAccID());
-		System.out.println("Account ID: " + getBalance());
-		System.out.println("Account ID: " + getType());
-		if(transactions.size() == 0)
+		System.out.println("Balance: " + getBalance());
+		System.out.println("Type: " + getAccType());
+		System.out.println("");
+		System.out.println("                 Transactions                 ");
+		System.out.println("                ==============                ");
+		if (transactions.size() == 0)
 		{
-			System.out.println("Empty transactions");
+			System.out.println("No transactions.");
 		}
-		for(int i = 0; i < transactions.size(); i++)
+		boolean hasType = false;
+		for (int i = 0; i < transactions.size(); i++) 
 		{
 			Transaction transaction = transactions.get(i);
-			if(transaction.getType().equals(type))
+			if (transaction.getType().equals(type)) 
 			{
-				System.out.println(transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());	
-			}	
+				System.out.println(transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());
+				hasType = true;
+			}
 		}
+		if (!hasType) 
+		{
+			System.out.println("No transaction of this type.");
+		}
+		
 		try
 		{
-			String fileName = "TransactionLog_" + type + ".txt";
+			String fileName = "TransLog_" + type + "_.txt";
 			File file = new File(fileName);
-			if(!file.exists()) 
+			if (!file.exists())
 			{
 				file.createNewFile();
 			}
@@ -146,31 +162,45 @@ public class Account
 			writer.println("");
 			writer.println("Account ID: " + getAccID());
 			writer.println("Balance: " + getBalance());
-			writer.println("Type: " + getType());
-			if(transactions.size() == 0)
+			writer.println("Type: " + getAccType());
+			writer.println("");
+			writer.println("                 Transactions                 ");
+			writer.println("                ==============                ");
+			if (transactions.size() == 0)
 			{
-				System.out.println("Empty transactions");
+				writer.println("No transactions.");
 			}
-			for(int i = 0; i < transactions.size(); i++)
+			for (int i = 0; i < transactions.size(); i++) 
 			{
 				Transaction transaction = transactions.get(i);
-				if(transaction.getType().equals(type))
+				if (transaction.getType().equals(type)) 
 				{
-					System.out.println(transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());	
-				}	
+					writer.println(transaction.getTransactionID() + "  " + transaction.getTime() + "  " + transaction.getType() + "  " + transaction.getAmount());
+				}
+			}
+			if (!hasType) 
+			{
+				writer.println("No transaction of this type.");
 			}
 			writer.close();
 		}
-		catch(IOException e)
+		catch (IOException e) 
 		{
 			e.getStackTrace();
 		}
 	}
 	
-//	public static void main(String[] args)
-//	{
-//		
-//	}
+	//returns the Account ID
+	public int getAccID() 
+	{
+		return accID;
+	}
+	
+	//returns the type of the Account
+	public String getAccType()
+	{
+		return accType;
+	}
 }
 
 

@@ -1,382 +1,455 @@
 import java.util.*;
-public class Tester
-{	
-	public static void main(String[] args) 
-	{
-		Bank bank = new Bank();
-	}
-}
 
 public class Bank 
 {
 	private ArrayList<User> users;
-	private int numOfUsers;
-	private int numOfAcc;
-	private User currUser;
+	private int userCount;
+	private int accountCount;
 	
-	public Bank()
-	{	
+	//constructor
+	public Bank() 
+	{
 		this.users = new ArrayList<User>();
-		this.numOfUsers = 0;
-		this.numOfAcc = 0;
+		this.userCount = 1;
+		this.accountCount = 1;
 		showLoginScreen();
 	}
 	
-	
-	public void showLoginScreen() //Shows signup and and login
+	//shows login screen
+	public void showLoginScreen() 
 	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Welcome to the Bank!");
-        System.out.println("--------------------");
-        System.out.println("Choose an option:");
-        System.out.println("1. Sign Up");
-        System.out.println("2. Login ");
-        System.out.println("--------------------");
-        System.out.println("");
-        
-        String choice = in.next();
-        if(choice.equals("1"))
-        {
-        	showSignUp();
-        }
-        else if (choice.equals("2"))
-        {
-           showLogin();
-        }
-        else
-        {
-            System.out.println("Please choose an option between 1 and 2");
-            showLoginScreen();
-        }
-    }
-	
-	public void showSignUp()
-	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Sign Up");
-        System.out.println("_________");
-        System.out.println("Choose a name: ");
-        String name = in.nextLine();
-        if(name.equals("") || name.equals(" "))
-        {
-        	System.out.println();
-        	showSignUp();
-        }
-        else if(usernameAlreadyExists(name))
-        {
-        	System.out.println("Username taken - Please try Again");
-        	showSignUp();
-        }
-        else
-        {
-        	System.out.println("Choose a password: ");
-            String password = in.nextLine();
-            if(password.equals(""))
-            {
-            	System.out.println("Enter a valid password");
-            	System.out.println("Welcome " + name + ", Your Password is: " + password);
-            	showSignUp();
-            }
-            else
-            {
-            	 User user = new User(name, password, numOfUsers);
-                 users.add(user);
-                 numOfUsers++;
-                 
-                 //basically logs in the user by saving the user as currUser
-                 currUser = user;
-                 
-                 System.out.println("Bank Account Created");
-                 showHomepage();
-            }
-        }
-       
-	}
-	
-	
-	
-	public void showLogin()
-	{
-		 Scanner in = new Scanner(System.in);
-		 System.out.println("Log in");
-		 System.out.println("Enter your Username: ");
-		 String name = in.nextLine();
-		 {
-			 if(name.equals(""))
-			 {
-				 System.out.println("Enter a valid username");
-				 showLogin();
-			 }
-			 else
-			 {
-				 System.out.println("Enter your password: " );
-				 String password = in.nextLine();
-				 if(password.equals(""))
-				 {
-					 System.out.println("Enter a valid password: ");
-				 }
-				 else
-				 {
-					 for(User user : users)
-					 {
-						 if(user.getName().equals(name) && password.equals(user.getPassword()))
-						 {
-							 showHomepage();
-								 
-						 }
-					 
-					 }
-					 System.out.println("User not Found");
-				 }
-			 }
-
-		 }
-	}
-	
-	public void showHomepage()
-	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("HomePage");
-		System.out.println("1. Create Account");
-		System.out.println("2. Delete Account");
-		System.out.println("3. Transfer");
-		System.out.println("4. Deposit");
-		System.out.println("5. Withdraw");
-		System.out.println("6. Show Accounts");
-		System.out.println("7. Show all Acounts");
-		System.out.println("8. Delete user");
-		System.out.println("9. Logout");
-		System.out.println("10. Quit");
+		Scanner scan = new Scanner(System.in);
 		System.out.println("");
-		String choice = in.next();
-		if(choice.equals("1"))
+		System.out.println("==============================================");
+		System.out.println("             Welcome to the Bank!             ");
+		System.out.println("==============================================");
+		System.out.println("1. Sign Up");
+		System.out.println("2. Login");
+		System.out.print("Choose an option: ");
+		String choice = scan.next();
+		if (choice.equals("1")) 
 		{
-			//Create Account
+			showSignUpPage();
 		}
-		else if(choice.equals("2"))
+		else if (choice.equals("2")) 
 		{
-			//Delete Account
+			loginPage();
 		}
-		else if(choice.equals("3"))
+		else 
 		{
-			//Transfer
+			System.out.println("Please choose an option between 1 and 2.");
+			showLoginScreen();
 		}
-		else if(choice.equals("4"))
+	}
+	
+	//shows sign up page
+	public void showSignUpPage() 
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                    Sign Up                   ");
+		System.out.println("==============================================");
+		System.out.print("Enter your name: ");
+		String name = scan.nextLine();
+		if (!validateName(name)) 
 		{
-			//Deposit
+			System.out.println("Please enter a valid name.");
+			showSignUpPage();
 		}
-		else if(choice.equals("5"))
+		else 
 		{
-			//Withdraw
+			System.out.print("Choose a username: ");
+			String username = scan.nextLine();
+			if (username.equals("")) 
+			{
+				System.out.println("Please enter a valid username.");
+				showSignUpPage();
+			}
+			else if (username.contains(" ")) 
+			{
+				System.out.println("Username cannot contain spaces.");
+				showSignUpPage();
+			}
+			else if (usernameAlreadyExists(username)) 
+			{
+				System.out.println("Username is already taken.");
+				showSignUpPage();
+			}
+			else 
+			{
+				System.out.print("Choose a password: ");
+				String password = scan.nextLine();
+				if (password.equals("")) 
+				{
+					System.out.println("Please enter a valid password.");
+					showSignUpPage();
+				}
+				else 
+				{
+					User user = new User(name, username, password, userCount);
+					users.add(user);
+					userCount++;
+					System.out.println("Bank account successfully created.");
+					showHomepage(user);
+					
+				}
+			}
 		}
-		else if(choice.equals("6"))
+	}
+	
+	//checks if name is valid
+	private boolean validateName(String name) 
+	{
+		if (name.equals("")) 
 		{
-			//Show Accounts
+			return false;
+		}	
+		//returns false if the name contains a digit
+		for (int i = 0; i < name.length(); i++) 
+		{
+			if (name.substring(i, i + 1).matches("\\d")) 
+			{
+				return false;
+			}
 		}
-		else if(choice.equals("7"))
+		//name is valid if it contains an alphabetic character
+		boolean isValid = false;
+		for (int j = 0; j < name.length(); j++) 
 		{
-			//Show All Accounts
+			if(name.substring(j, j + 1).matches("\\p{Alpha}"))
+			{
+				isValid = true;
+				break;
+			}
 		}
-		else if(choice.equals("8"))
+		return isValid;
+	}
+	
+	//shows login page
+	public void loginPage() 
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                    Login                     ");
+		System.out.println("==============================================");
+		System.out.print("Enter your username: ");
+		String username = scan.nextLine();
+		if (username.equals(""))
 		{
-			//Delete User
+			System.out.println("Please enter a valid username.");
 		}
-		else if(choice.equals("9"))
+		else if (username.contains(" "))
 		{
-			//Logout 
-		}
-		else if(choice.equals("10"))
-		{
-			//Quit
+			System.out.println("Invalid username.");
+			loginPage();
 		}
 		else
 		{
-			System.out.println("Enter a valid option");
-			showHomepage();
+			System.out.print("Enter your password: ");
+			String password = scan.nextLine();
+			if (password.equals("")) 
+			{
+				System.out.println("Please enter a valid password.");
+			}
+			else 
+			{
+				for (int i = 0; i < users.size(); i++) 
+				{
+					if (users.get(i).getUsername().equals(username)) 
+					{
+						if (password.equals(users.get(i).getPassword())) 
+						{
+							showHomepage(users.get(i));
+						}
+					}
+				}
+				System.out.println("Username or password is incorrect.");
+				loginPage();
+			}
 		}
 	}
 	
-	public void showCreateAccount(User user)
+	//shows Homepage
+	public void showHomepage(User user) 
 	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("1. Create Savings Account");
-		System.out.println("2. Create Checkings Account");
-		System.out.println("Choose an option: ");
-		String type = in.nextLine();
-		if(type.equals("1"))
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                   Homepage                   ");
+		System.out.println("==============================================");
+		System.out.println("Hello " + user.getName() + "!");
+		System.out.println("1. Create an Account");
+		System.out.println("2. Delete an Account");
+		System.out.println("3. Transfer to another Account");
+		System.out.println("4. Deposit");
+		System.out.println("5. Withdraw");
+		System.out.println("6. Show Account");
+		System.out.println("7. Show All Accounts");
+		System.out.println("8. Delete User");
+		System.out.println("9. Logout");
+		System.out.println("10. Quit");
+		System.out.print("Choose an option: ");
+		String choice = scan.next();
+		
+		switch (choice) {
+		case "1":
+			showCreateAnAccountPage(user);
+			break;
+		case "2":
+			deleteAnAccountPage(user);
+			break;
+		case "3":
+			showTransferToAnotherAccountPage(user);
+			break;
+		case "4":
+			showDepositPage(user);
+			break;
+		case "5":
+			showWithdrawPage(user);
+			break;
+		case "6":
+			showAccountPage(user);
+			break;
+		case "7":
+			showAllAccountsPage(user);
+			break;
+		case "8":
+			showDeleteUserPage(user);
+			break;
+		case "9":
+			System.out.println("You have logged out.");
+			showLoginScreen();
+			break;
+		case "10":
+			System.out.println("Exited program");
+			System.exit(0);
+			break;
+		default:
+			System.out.println("Please choose an option between 1 and 10.");
+			showHomepage(user);
+			break;
+		}
+	}
+		
+	//show Create an Account page
+	public void showCreateAnAccountPage(User user) 
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("              Create an Account               ");
+		System.out.println("==============================================");
+		System.out.println("1. Create a Savings Account");
+		System.out.println("2. Create a Checkings Account");
+		System.out.print("Choose an option: ");
+		String accountType = scan.next();
+		if (accountType.equals("1")) 
 		{
 			createAccount("Savings", user);
 		}
-		else if(type.equals("2"))
+		else if (accountType.equals("2")) 
 		{
 			createAccount("Checkings", user);
 		}
-		else
+		else 
 		{
-			System.out.println("Choose a valid option");
-			showCreateAccount(user);
+			System.out.println("Please choose an option between 1 and 2.");
+			showCreateAnAccountPage(user);
 		}
 	}
 	
-	public void createAccount(String type, User user)
+	private void createAccount(String type, User user) 
 	{
-		if(!user.accountLimit())
+		Account account = new Account(accountCount, type);
+		if (!user.hasFiveAccounts())
 		{
-			Account account = new Account(numOfAcc, type);
-			System.out.println("Account has been created");
-			numOfAcc++;
+			System.out.println("The account ID is: " + accountCount);
+			accountCount++;
 			user.addAccount(account);
 		}
-		else
+		else 
 		{
-			System.out.println("You can only have 5 accounts at a time");
+			System.out.println("You can only have five accounts.");
 		}
-		showHomepage();	
+		showHomepage(user);
 	}
 	
-	public void deleteAccount()
+	//show Delete a Checkings/Savings Account page
+	public void deleteAnAccountPage(User user) 
 	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter the ID: ");
-		if(!in.hasNextInt())
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("              Delete an Account               ");
+		System.out.println("==============================================");
+		System.out.print("Enter the ID of the account you would like to delete: ");
+		if (!scan.hasNextInt()) 
 		{
-			System.out.println("Invalid account");
-			deleteAccount();
+			System.out.println("Invalid Account ID.");
+			deleteAnAccountPage(user);
 		}
-		int accID = in.nextInt();
-		if(currUser.accountExistence(accID))
+		else 
 		{
-			currUser.removeAccount(accID);
-			System.out.println("Account deleted");
-		}
-		else
-		{
-			System.out.println("Account not found");
-			showHomepage();
-		}
-	}
-	
-	public void transferToAnotherAccount()
-	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter amount to transfer");
-		if(!in.hasNextDouble())
-		{
-			System.out.println("Invalid amount");
-			transferToAnotherAccount();
-		}
-		double amount = in.nextDouble();
-		
-		if(amount < 0)
-		{
-			System.out.println("Invalid amount");
-			transferToAnotherAccount();		
-		}
-		System.out.println("Enter the ID of the account to transfer");
-		if(!in.hasNextInt())
-		{
-			System.out.println("Invalid Account ID");
-			transferToAnotherAccount();
-		}
-		int targetAccID = in.nextInt();
-		
-		if(accountExists(targetAccID))
-		{
-			System.out.println("Enter the ID of the account to withhdraw money");
-			if(!in.hasNextInt())
+			int accID = scan.nextInt();
+			if (user.accountExistsUnderUser(accID)) 
 			{
-				System.out.println("Invalid Acount Id");
-				transferToAnotherAccount();
+				user.removeAccount(accID);
+				System.out.println("Account successfully deleted.");
 			}
-			int senderAccID = in.nextInt();
-			
-			if(currUser.accountExistence(senderAccID))
+			else 
 			{
-	//			currUser.spend(targetAccID, amount, "Transfer");
-				if(currUser.sufficientFund(senderAccID, amount))
+				System.out.println("Account does not exist.");
+			}
+			showHomepage(user);
+		}
+	}
+	
+	public void showTransferToAnotherAccountPage(User user)
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                   Transfer                   ");
+		System.out.println("==============================================");
+		System.out.print("Enter the amount you would like to transfer: ");
+		if (!scan.hasNextDouble()) 
+		{
+			System.out.println("Invalid amount.");
+			showTransferToAnotherAccountPage(user);
+		}
+		else 
+		{
+			double amount = scan.nextDouble();
+			if (amount < 0) 
+			{
+				System.out.println("Invalid amount.");
+				showTransferToAnotherAccountPage(user);
+			}
+			System.out.print("Enter the ID of the account you would like to transfer money to: ");
+			if (!scan.hasNextInt()) 
+			{
+				System.out.println("Invalid Account ID.");
+				showTransferToAnotherAccountPage(user);
+			}
+			else 
+			{
+				int recipientAccID = scan.nextInt();
+				if (accountExists(recipientAccID)) 
 				{
-					User recipient = findRecipient(targetAccID);
-					recipient.receive(targetAccID,  amount);;
-				}
-				else {
-					System.out.println("Insufficient Funds");
-				}
-			}
-			else
-			{
-				System.out.println("Account not found");
-			}
-		}
-		else
-		{
-			System.out.println("Account not found");
-		}
-	}
-	
-	public void deposit()
-	{
-		Scanner in = new Scanner(System.in);
-		if(!in.hasNextInt())
-		{
-			System.out.println("Invalid Account ID");
-			deposit();
-		}
-		int accID = in.nextInt();
-		
-		if(currUser.accountExistence(accID))
-		{
-			System.out.println("Amount to deposit");
-			if(!in.hasNextDouble())
-			{
-				System.out.println("Invalid amount");
-				deposit();
-			}
-			else
-			{
-				double amount = in.nextDouble();
-				if(amount < 0 )
-				{
-					System.out.println("Invalid amount");
-					deposit();
+					System.out.print("Enter the ID of the account you would like to withdraw the money from: ");
+					if (!scan.hasNextInt()) 
+					{
+						System.out.println("Invaid Account ID.");
+						showTransferToAnotherAccountPage(user);
+					}
+					int senderAccID = scan.nextInt();
+					if (user.accountExistsUnderUser(senderAccID))
+					{
+						if (user.hasEnough(senderAccID, amount)) 
+						{
+							user.spend(senderAccID, amount, "Transfer");
+							User recipient = findRecipient(recipientAccID);
+							recipient.receive(recipientAccID, amount);
+						}
+						else 
+						{
+							System.out.println("You do not have enough money.");
+						}
+					}
+					else 
+					{
+						System.out.println("Account does not exist.");
+					}
 				}
 				else
 				{
-					currUser.depositToAccount(accID, amount);
+					System.out.println("Account does not exist.");
 				}
+				showHomepage(user);
 			}
 		}
-		else
-		{
-			System.out.println("Account not found");
-		}
-		showHomepage();
 	}
 	
-	public void withdraw(User user)
+	//show Deposit Page
+	public void showDepositPage(User user)
 	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter ID of account to withdraw");
-		if(!in.hasNextInt())
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                   Deposit                    ");
+		System.out.println("==============================================");
+		System.out.print("Enter the ID of the account you would like to deposit money to: ");
+		//if the account ID entered is not valid, show deposit page
+		if (!scan.hasNextInt()) 
 		{
 			System.out.println("Invalid Account ID.");
-			withdraw(user);
+			showDepositPage(user);
 		}
-		int accID = in.nextInt();
-		if(user.accountExistence(accID))
+		else 
 		{
-			System.out.println("Enter amount to withdraw: ");
-			if(!in.hasNextDouble())
+			int accID = scan.nextInt();
+			if (user.accountExistsUnderUser(accID)) 
 			{
-				System.out.println("Invalid amount");
-				withdraw(user); ////or deposit(user)
+				System.out.print("Enter the amount you would like to deposit: ");
+				if (!scan.hasNextDouble())
+				{
+					System.out.println("Invalid amount.");
+					showDepositPage(user);
+				}
+				else 
+				{
+					double amount = scan.nextDouble();
+					if (amount < 0) 
+					{
+						System.out.println("Invalid amount.");
+						showDepositPage(user);
+					}
+					else
+					{
+						user.depositToAccount(accID, amount);
+					}
+				}
 			}
-			double amount = in.nextDouble();
-			if(amount < 0)
+			else 
 			{
-				System.out.println("Invalid amount");
-				withdraw(user); //or deposit(user)
+				System.out.println("Account does not exist.");
 			}
-			System.out.println("Type of Transaction?");
+			showHomepage(user);
+		}
+	}
+	
+	//show Withdraw page
+	public void showWithdrawPage(User user)
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                   Withdraw                   ");
+		System.out.println("==============================================");
+		System.out.print("Enter the ID of the account you would like to withdraw money from: ");
+		if (!scan.hasNextInt()) 
+		{
+			System.out.println("Invalid Account ID.");
+			showWithdrawPage(user);
+		}
+		int accID = scan.nextInt();
+		if (user.accountExistsUnderUser(accID)) 
+		{
+			System.out.print("Enter the amount you would like to withdraw: ");
+			if (!scan.hasNextDouble())
+			{
+				System.out.println("Invalid amount.");
+				showDepositPage(user);
+			}
+			double amount = scan.nextDouble();
+			if (amount < 0) 
+			{
+				System.out.println("Invalid amount.");
+				showDepositPage(user);
+			}
+			System.out.println("What type of transaction is this?");
 			System.out.println("1. Food");
 			System.out.println("2. Gas");
 			System.out.println("3. Bills");
@@ -384,7 +457,8 @@ public class Bank
 			System.out.println("5. Withdrawal");
 			System.out.println("6. Transfer");
 			System.out.print("Choose an option: ");
-			String choice = in.next();
+			String choice = scan.next();
+			
 			if (choice.equals("1")) 
 			{
 				choice = "Food";
@@ -393,14 +467,15 @@ public class Bank
 			{
 				choice = "Gas";
 			}
-			else if (choice.equals("3")) {
+			else if (choice.equals("3")) 
+			{
 				choice = "Bills";
 			}
 			else if (choice.equals("4")) 
 			{
 				choice = "Clothes";
 			}
-			else if (choice.equals("5")) 
+			else if (choice.equals("5"))
 			{
 				choice = "Withdrawal";
 			}
@@ -410,39 +485,44 @@ public class Bank
 			}
 			else
 			{
-				System.out.println("Choose a valid option");
-				withdraw(user);
+				System.out.println("Please choose an option between 1 and 6.");
+				showWithdrawPage(user);
 			}
-			user.spend(accID,amount,choice);
+			user.spend(accID, amount, choice);
 		}
-		else
+		else 
 		{
-			System.out.println("Account does not exist");
+			System.out.println("Account does not exist.");
 		}
-		showHomepage();
+		showHomepage(user);
 	}
 	
-	public void showAccount()
+	//show Account page
+	public void showAccountPage(User user)
 	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter then Account ID to see");
-		if(!in.hasNextInt())
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                   Account                    ");
+		System.out.println("==============================================");
+		System.out.print("Enter the ID of the account you would like to check: ");
+		if (!scan.hasNextInt()) 
 		{
-			System.out.println("Invalid Account ID");
-			showAccount();
+			System.out.println("Invalid Account ID.");
+			showAccountPage(user);
 		}
 		else
 		{
-			int accID = in.nextInt();
-			if(currUser.accountExistence(accID))
+			int accID = scan.nextInt();
+			if (user.accountExistsUnderUser(accID)) 
 			{
-				System.out.println("1. See all transcations");
-				System.out.println("2. Transcation history by type");
-				System.out.println("Choose an option: ");
-				String choice = in.next();
-				if(choice.equals("1"))
+				System.out.println("1. See all transactions");
+				System.out.println("2. See transactions of a certain type");
+				System.out.print("Choose an option: ");
+				String choice = scan.next();
+				if (choice.equals("1")) 
 				{
-					currUser.printAccountInfo(accID);
+					user.printAccountInfo(accID);
 				}
 				else if (choice.equals("2"))
 				{
@@ -454,7 +534,7 @@ public class Bank
 					System.out.println("6. Withdrawal");
 					System.out.println("7. Transfer");
 					System.out.print("Choose a type: ");
-					String transactionType = in.next();
+					String transactionType = scan.next();
 					if (transactionType.equals("1")) 
 					{
 						transactionType = "Food";
@@ -467,7 +547,7 @@ public class Bank
 					{
 						transactionType = "Bills";
 					}
-					else if (transactionType.equals("4"))
+					else if (transactionType.equals("4")) 
 					{
 						transactionType = "Clothes";
 					}
@@ -479,74 +559,88 @@ public class Bank
 					{
 						transactionType = "Withdrawal";
 					}
-					else if (transactionType.equals("7")) 
+					else if (transactionType.equals("7"))
 					{
 						transactionType = "Transfer";
 					}
-					else
+					else 
 					{
-						System.out.println("Enter a valid option");
-						showAccount();
+						System.out.println("P`lease choose an option between 1 and 7.");
+						showAccountPage(user);
 					}
-					currUser.printAccountInfo(accID, transactionType);
+					user.printAccountInfo(accID, transactionType);
 				}
+				
 			}
 			else
 			{
-				System.out.println("Account not found");
+				System.out.println("Account does not exist.");
 			}
 		}
-		showHomepage();
+		showHomepage(user);
 	}
 	
-	public void showAllAccounts(User user)
+	//show Accounts page
+	public void showAllAccountsPage(User user) 
 	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                   Accounts                   ");
+		System.out.println("==============================================");
 		user.printAllAccountsInfo();
-		showHomepage();
+		showHomepage(user);
 	}
 	
-	public void deleteUser(User user)
+	//show Delete User page
+	public void showDeleteUserPage(User user) 
 	{
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter your password");
-		String password = in.nextLine();
-		if(password.equals(""))
+		Scanner scan = new Scanner(System.in);
+		System.out.println("");
+		System.out.println("==============================================");
+		System.out.println("                 Delete User                  ");
+		System.out.println("==============================================");
+		System.out.print("To delete your User, enter your password: ");
+		String password = scan.nextLine();
+		if (password.equals("")) 
 		{
-			System.out.println("Enter a valid password.");
-			deleteUser(user);
+			System.out.println("Please enter a valid password.");
+			showDeleteUserPage(user);
 		}
-		else
+		else 
 		{
-			user.removeAccount(findUserIndex(user));
-			System.out.println("Deleted");
+			users.remove(findUserIndex(user));
+			System.out.println("User deleted.");
 			showLoginScreen();
 		}
 	}
 	
-	public int findUserIndex(User user) //index of User in the ArrayList
+	//finds the index of the User in the ArrayList
+	private int findUserIndex(User user) 
 	{
 		int index = 0;
-		for(int i = 0 ; i < users.size(); i++)
+		for (int i = 0; i < users.size(); i++) 
 		{
 			User temp = users.get(i);
-			if(temp.getPassword().equals(user.getPassword()))
+			if (temp.getUsername().equals(user.getUsername())) 
 			{
-				if(temp.getPassword().equals(user.getPassword()))
+				if (temp.getPassword().equals(user.getPassword())) 
 				{
 					index = i;
-					//?
+					break;
 				}
 			}
 		}
 		return index;
 	}
 	
-	public boolean usernameAlreadyExists(String username) 
+	//checks if username already exists
+	private boolean usernameAlreadyExists(String username) 
 	{
 		boolean usernameExist = false;
 		for (int i = 0; i < users.size(); i++) 
 		{
-			if (users.get(i).getName().equals(username)) 
+			if (users.get(i).getUsername().equals(username))
 			{
 				usernameExist = true;
 				break;
@@ -555,31 +649,33 @@ public class Bank
 		return usernameExist;
 	}
 	
-	public User findRecipient(int accID) //Find the User's chekcing/saving account with ID
-	{
-		User recipient = null;
-		for (int i = 0; i < users.size(); i++) 
-		{
-			User user = users.get(i);
-			if (user.accountExistence(accID)) 
-			{
-				recipient = user;
-			}
-		}
-		return recipient;
-	}
-	
-	public boolean accountExists(int accID) //Checks to see if a checking or saving with a the give Account ID exists
+	//checks if a Checkings/Savings account with the given ID exists
+	private boolean accountExists(int accID) 
 	{
 		for (int i = 0; i < users.size(); i++) 
 		{
 			User user = users.get(i);
-			if (user.accountExistence(accID)) 
+			if (user.accountExistsUnderUser(accID)) 
 			{
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	//finds the User that has a Checkings/Savings account with the given ID
+	private User findRecipient(int accID) 
+	{
+		User recipient = null;
+		for (int i = 0; i < users.size(); i++)
+		{
+			User user = users.get(i);
+			if (user.accountExistsUnderUser(accID)) 
+			{
+				recipient = user;
+				break;
+			}
+		}
+		return recipient;
+	}
 }
-

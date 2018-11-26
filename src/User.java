@@ -1,47 +1,92 @@
 import java.util.*;
-public class User 
+
+public class User
 {
 	private String name;
-	private String pass;
-	int userId;
-	private static int count = 1000;
+	private String username;
+	private String password;
+//	private int userID;
 	private ArrayList<Account> accounts;
 	
-	public User(String myName, String myPass, int myUserId)
+	//constructor
+	public User(String name, String username, String password, int userID) 
 	{
-		name = myName;
-		pass = myPass;
-		userId = myUserId;
-		myUserId = count;
-		count++;
+		this.name = name;
+		this.username = username;
+		this.password = password;
+//		this.userID = userID;
+		accounts = new ArrayList<Account>();
 	}
 	
-	public void setPassword()
+	//returns the User's password
+	public String getPassword() 
 	{
-		Scanner in = new Scanner(System.in);
-        String newPassword = in.next();
-        pass = newPassword;
-        in.close();
+		return password;
 	}
 	
-	public String getPassword()
-	{
-		return pass;
-	}
-	
-	public void setName()
-	{
-		Scanner in = new Scanner(System.in);
-        String newName = in.next();
-        name = newName;
-        in.close();
-	}
-	
-	public String getName()
+	//returns the User's name
+	public String getName() 
 	{
 		return name;
 	}
 	
+	//returns the User's username
+	public String getUsername() 
+	{
+		return username;
+	}
+
+	//spends money from the User's account with the given ID
+	public void spend(int accID, double amount, String type) 
+	{
+		int accIndex = getAccountIndex(accID);
+		Account account = accounts.get(accIndex);
+		if (amount > account.getBalance()) 
+		{
+			System.out.println("You do not have enough money.");
+		}
+		else 
+		{
+			account.withdraw(amount, type);
+			if (type.equals("Transfer")) 
+			{
+				System.out.println("Transfer completed.");
+			}
+		}
+		
+	}
+	
+	//adds a Checkings/Savings account if the User doesn't already have 5 accounts
+	public void addAccount(Account newAccount) 
+	{
+		if (accounts.size() < 5) 
+		{
+			accounts.add(newAccount);
+			System.out.println(newAccount.getAccType() + " account successfully created.");
+		}
+	}
+	
+	//search if the account is under the User
+	public boolean accountExistsUnderUser(int accountID) 
+	{
+		for (int i = 0; i < accounts.size(); i++) 
+		{
+			if (accounts.get(i).getAccID() == accountID) 
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//removes a Checkings/Savings account
+	public void removeAccount(int accountID) 
+	{
+		int index = getAccountIndex(accountID);
+		accounts.remove(index);
+	}
+	
+	//returns the index of the account in the arraylist that has the given account ID
 	private int getAccountIndex(int accID) 
 	{
 		int index = 0;
@@ -55,98 +100,57 @@ public class User
 		return index;
 	}
 	
-	public void spend(int accID, double amount, String type)
+	//deposits an amount of money to the Account with the given ID
+	public void depositToAccount(int accountID, double amount) 
 	{
-		int accIndex = getAccountIndex(accID);
-		Account account = accounts.get(accIndex);
-		if(amount > account.getBalance())
-		{
-			System.out.println("Insufficient funds");
-		}
-		else
-		{
-			account.withdraw(amount, type);
-			if(type.equalsIgnoreCase("Transfer"))
-			{
-				System.out.println("Transfer completed");
-			}
-		}
-	}
-	
-	public void addAccount(Account newAccount)
-	{
-		if(accounts.size() < 5)
-		{
-			accounts.add(newAccount);
-			System.out.println(newAccount.getType() + " Account created");
-		}
-	}
-	
-	public boolean accountExistence(int accID)
-	{
-		for(int i = 0; i < accounts.size(); i++)
-		{
-			if(accounts.get(i).getAccID() == accID)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public void removeAccount(int accID) 
-	{
-		int index = getAccountIndex(accID);
-		accounts.remove(index);
-	}
-	
-	public void depositToAccount(int accID, double amount) 
-	{
-		int index = getAccountIndex(accID);
+		int index = getAccountIndex(accountID);
 		Account account = accounts.get(index);
 		account.deposit(amount, "Deposit");
 	}
 	
+	//prints all of the User's Checkings/Savings account information
 	public void printAllAccountsInfo() 
 	{
 		if (accounts.size() == 0) 
 		{
-			System.out.println("No existing accounts");
+			System.out.println("You do not have any accounts.");
 		}
-		for(int i = 0; i < accounts.size(); i++) 
+		for (int i = 0; i < accounts.size(); i++) 
 		{
 			Account account = accounts.get(i);
 			System.out.println("Account ID: " + account.getAccID());
 			System.out.println("Balance: " + account.getBalance());
-			System.out.println("Type: " + account.getType());
+			System.out.println("Type: " + account.getAccType());
+			System.out.println("");
 		}
 	}
 	
+	//prints the information and transactions of the Account with the given ID
 	public void printAccountInfo(int accID) 
 	{
-		int index = getAccountIndex(accID);
-		Account account = accounts.get(index);
+		int accIndex = getAccountIndex(accID);
+		Account account = accounts.get(accIndex);
 		account.printTransactionLog();
 	}
 	
-	
-	public void printAccountInfo(int accID, String type) 
+	//prints the information and transactions of a certain type of the Account with the given ID
+	public void printAccountInfo(int accID, String type)
 	{
-		int index = getAccountIndex(accID);
-		Account account = accounts.get(index);
+		int accIndex = getAccountIndex(accID);
+		Account account = accounts.get(accIndex);
 		account.printTransactionLog(type);
 	}
 	
-	
+	//receives the money that was transfered to the Account with the given ID
 	public void receive(int accID, double amount) 
 	{
 		int index = getAccountIndex(accID);
 		Account account = accounts.get(index);
 		account.deposit(amount, "Transfer");
 	}
-			
-			
-	public boolean accountLimit() 
+	
+	//checks if the User already has 5 accounts
+	public boolean hasFiveAccounts() 
 	{
 		if (accounts.size() == 5) 
 		{
@@ -158,7 +162,8 @@ public class User
 		}
 	}
 	
-	public boolean sufficientFund(int accID, double amount) 
+	//checks if the User has enough money in the account with the given ID for the transfer
+	public boolean hasEnough(int accID, double amount) 
 	{
 		int index = getAccountIndex(accID);
 		Account account = accounts.get(index);
@@ -171,10 +176,4 @@ public class User
 			return false;
 		}
 	}
-
-//	public static void main(String[] args)
-//	{
-//		
-//	}
 }
-		

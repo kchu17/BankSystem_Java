@@ -1,78 +1,60 @@
-import java.time.LocalDateTime;
-import java.util.*;
+import java.time.LocalTime;
 
 public class Transaction implements Comparable
 {
-	private LocalDateTime time;
 	private int transactionID;
 	private double amount;
 	private String type;
+	private LocalTime time;
 	
-	public Transaction(int transactionID, double amount, String type, LocalDateTime time)
+	//constructor
+	public Transaction(int transactionID, double amount, String type, LocalTime time)
 	{
 		this.transactionID = transactionID;
 		this.amount = amount;
 		this.type = type;
 		this.time = time;
-//		Scanner in = new Scanner(System.in);
-//		TransactionID = in.next();
-//		this.TransactionID = TransactionID;
-//		amount = in.nextDouble();
-//		this.amount = amount;
-//		type = in.next();
-//		if(!type.equalsIgnoreCase("Food") || !type.equalsIgnoreCase("Gas") || !type.equalsIgnoreCase("Bills") || !type.equalsIgnoreCase("Transfer")
-//				|| !type.equalsIgnoreCase("Clothes") || !type.equalsIgnoreCase("Deposit")||!type.equalsIgnoreCase("Withdrawl"))
-//		{
-//			System.out.println("Enter a valid type");
-//		}
-//		else
-//		{
-//			this.type = type;
-//		}
-//		in.close();
 	}
 	
-	
-	public LocalDateTime getTime()
+	//returns the time of the transaction
+	public LocalTime getTime()
 	{
 		return time;
 	}
 	
+	//returns the type of the transaction
 	public String getType()
 	{
 		return type;
 	}
 	
-	public double getAmount()
+	//returns the amount of the transaction
+	public double getAmount() 
 	{
 		return amount;
 	}
 	
-	public int getTransactionID()
+	//return the transaction ID
+	public int getTransactionID() 
 	{
 		return transactionID;
 	}
 	
-	
-	public int compareTo(Object object)
+	@Override
+	public int compareTo(Object o) 
 	{
-		LocalDateTime other = (LocalDateTime) object;
-		if(this.time.isAfter(other))
+		LocalTime other = (LocalTime)o;
+		if (this.time.isAfter(other)) 
 		{
 			return 1;
 		}
-		else if(this.time.isBefore(other))
+		else if (this.time.isBefore(other))
 		{
 			return -1;
 		}
-		else
+		else 
 		{
 			return 0;
 		}
 	}
-	
-//	public static void main(String[] args)
-//	{
-//		
-//	}
 }
