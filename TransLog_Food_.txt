@@ -1,0 +1,8 @@
+
+Account ID: 1
+Balance: 500.0
+Type: Checkings
+
+                 Transactions                 
+                ==============                
+No transaction of this type.

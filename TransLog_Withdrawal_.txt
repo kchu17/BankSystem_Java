@@ -1,0 +1,8 @@
+
+Account ID: 1
+Balance: 4150.0
+Type: Checkings
+
+                 Transactions                 
+                ==============                
+5  14:12:11.667  Withdrawal  -1000.0

@@ -1,0 +1,8 @@
+
+Account ID: 1
+Balance: 500.0
+Type: Checkings
+
+                 Transactions                 
+                ==============                
+0  14:09:57.315  Deposit  500.0
